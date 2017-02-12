@@ -1,0 +1,85 @@
+<?php
+$form->setAttribute('class', 'form-horizontal');
+$form->prepare();
+?>
+<article>
+   <section>
+   <div class="contact_form">
+       <header>
+           <h2><?= $this->translate('Вы можете отправить нам сообщение'); ?></h2>
+               <span class="borderline"></span>
+       </header>
+       <?= $this->form(null, null)->openTag($form); ?>
+       <? $fieldsetElements = $form->get('contact')->getElements();?>
+		
+       
+           <?php if(isset($message)): ?>
+				<div class="message">
+					<?= $message; ?>
+				</div>
+            <?php endif;?>
+      
+        <div class="row bottom-margin">
+            <div class="col-sm-6">
+                <?= $this->formRow($fieldsetElements['firstName']); ?>
+            </div>
+            <div class="col-sm-6">
+                <?= $this->formRow($fieldsetElements['lastName']); ?>
+            </div>
+        </div>
+        <div class="row bottom-margin">
+            <div class="col-sm-6">
+                <?= $this->formRow($fieldsetElements['email']); ?>
+            </div>
+            <div class="col-sm-6">
+                <?= $this->formRow($fieldsetElements['phone']); ?>
+            </div>
+        </div>
+        <div class="row bottom-margin">
+            <div class="col-md-12">
+                <?= $this->formRow($fieldsetElements['text']); ?>
+            </div>
+        </div>
+         <div class="row bottom-margin">
+            <div class="col-md-12">
+                <script src='https://www.google.com/recaptcha/api.js'></script>
+                   <p style="max-width:400px" class="g-recaptcha comment-form-text"
+                      data-sitekey="6LfMzCETAAAAAP4ipsWkJLumC9G60_bpXV2mZgfZ"></p>
+                      <!--data-sitekey="6LeByBkTAAAAAMldccjge_-ZvHMwfAiiN4YPN0Ok"></p>-->
+
+                      <!--for domen inform.dev-->
+                      <!--data-sitekey="6LfMzCETAAAAAP4ipsWkJLumC9G60_bpXV2mZgfZ"></p>-->
+
+            </div>
+         </div>
+       <?php if (!((new \Manage\Acl\Helper\Acl())->checkAclByModule('manage\index'))): ?>
+         <?= $this->formElement($form->get('button')); ?>
+             <?= $this->form()->closeTag(); ?>
+       <?php endif; ?>
+
+	</div>
+   </section>
+</article>
+
+<script type="text/javascript">
+   jQuery(".show-more").on('click', function () {
+        var form = $('#contact');
+        var data = form.serialize();
+
+       console.log(jQuery('.rc-anchor-content').text());
+        $.ajax({
+            type: form.attr('method'),
+            url: '/mail',
+            dataType: 'html',
+            data: data,
+               encode: true
+            }).done(function (data) {
+
+                console.log(data);
+
+               form.parent().html(data);
+            }).fail(function (data) {
+            });
+            event.preventDefault();
+            });
+</script>
